@@ -26,11 +26,10 @@ describe('processInput', () => {
       const result = processInput('nonexistentfile.csv');
       expect(result).to.equal(0);
     });
-    it('should handle if there is less than 2 lines', () =>{
-        const testFileContent = 'Line 1';
-        fs.writeFileSync('testfile.csv', testFileContent);
+    it('should handle if there is less than 1 lines', () =>{
+        fs.writeFileSync('testfile.csv', '');
         const result = processInput('testfile.csv')
-        expect(result).to.equal('Minimum amount of lines is 2')
+        expect(result).to.equal('Minimum amount of lines is 1')
         fs.unlinkSync('testfile.csv');
     })
     it('should handle if there is more or equals than 10^4 lines', () =>{

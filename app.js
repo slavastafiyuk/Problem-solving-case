@@ -11,9 +11,8 @@ function processInput(inputFileName) {
   const productBrands = new Map();
   const lineCount = countLines(inputFileName);
   let total_orders = 0
-
-  console.log(1 < lineCount)
-  if (1 < lineCount == true && lineCount < Math.pow(10, 4) == true) {
+  
+  if (1 <= lineCount == true && lineCount <= Math.pow(10, 4) == true) {
     const rl = readline.createInterface({
       input: fs.createReadStream(inputFileName),
       output: process.stdout,
@@ -60,7 +59,7 @@ function processInput(inputFileName) {
     });
   } else {
     if (1 >= lineCount == true) {
-      return 'Minimum amount of lines is 2'
+      return 'Minimum amount of lines is 1'
     } else if (lineCount > Math.pow(10, 4) == true) {
       return 'Maximum amount of lines is 10^4'
     }
