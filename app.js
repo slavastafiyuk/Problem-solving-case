@@ -8,62 +8,72 @@ function processInput(inputFileName) {
   const lineCount = countLines(inputFileName);
   let total_orders = 0
 
-  const rl = readline.createInterface({
-    input: fs.createReadStream(inputFileName),
-    output: process.stdout,
-    terminal: false
-  });
-
-  rl.on('line', (line) => {
-    const [id, area, productName, quantity, brand] = line.split(',');
-    const parsedQuantity = parseInt(quantity);
-    
-    // Update product quantities
-    if (productQuantities.has(productName)) {
-      productQuantities.set(productName, productQuantities.get(productName) + parsedQuantity);
-    } else {
-      productQuantities.set(productName, parsedQuantity);
-    }
-    // Update product brands
-    if (!productBrands.has(productName)) {
-      productBrands.set(productName, new Map());
-    }
-    if (productBrands.get(productName).has(brand)) {
-      productBrands.get(productName).set(brand, productBrands.get(productName).get(brand) + 1);
-    } else {
-      productBrands.get(productName).set(brand, 1);
-    }
-
-    total_orders++
-  });
-
-  rl.on('close', () => {
-    // Calculate average quantities
-    const averageQuantities = Array.from(productQuantities.entries()).map(([product, quantity]) => {
-      return [product, (quantity / total_orders).toFixed(3)];
+  console.log(1 < lineCount)
+  if(1 < lineCount == true && lineCount<Math.pow(10, 4) == true){
+    const rl = readline.createInterface({
+      input: fs.createReadStream(inputFileName),
+      output: process.stdout,
+      terminal: false
     });
-
-    // Calculate most popular brands
-    const popularBrands = Array.from(productBrands.entries()).map(([product, brandsMap]) => {
-      let maxBrand = '';
-      let maxCount = 0;
-      for (const [brand, count] of brandsMap.entries()) {
-        if (count > maxCount) {
-          maxBrand = brand;
-          maxCount = count;
-        }
+  
+    rl.on('line', (line) => {
+      const [id, area, productName, quantity, brand] = line.split(',');
+      const parsedQuantity = parseInt(quantity);
+      
+      // Update product quantities
+      if (productQuantities.has(productName)) {
+        productQuantities.set(productName, productQuantities.get(productName) + parsedQuantity);
+      } else {
+        productQuantities.set(productName, parsedQuantity);
       }
-      return [product, maxBrand];
+      // Update product brands
+      if (!productBrands.has(productName)) {
+        productBrands.set(productName, new Map());
+      }
+      if (productBrands.get(productName).has(brand)) {
+        productBrands.get(productName).set(brand, productBrands.get(productName).get(brand) + 1);
+      } else {
+        productBrands.get(productName).set(brand, 1);
+      }
+  
+      total_orders++
     });
-
-    // Create output files
-    const outputFileName0 = `0_${inputFileName}`;
-    const outputFileName1 = `1_${inputFileName}`;
-
-    // Write output to files
-    writeOutput(outputFileName0, averageQuantities);
-    writeOutput(outputFileName1, popularBrands);
-  });
+  
+    rl.on('close', () => {
+      // Calculate average quantities
+      const averageQuantities = Array.from(productQuantities.entries()).map(([product, quantity]) => {
+        return [product, (quantity / total_orders).toFixed(3)];
+      });
+  
+      // Calculate most popular brands
+      const popularBrands = Array.from(productBrands.entries()).map(([product, brandsMap]) => {
+        let maxBrand = '';
+        let maxCount = 0;
+        for (const [brand, count] of brandsMap.entries()) {
+          if (count > maxCount) {
+            maxBrand = brand;
+            maxCount = count;
+          }
+        }
+        return [product, maxBrand];
+      });
+  
+      // Create output files
+      const outputFileName0 = `0_${inputFileName}`;
+      const outputFileName1 = `1_${inputFileName}`;
+  
+      // Write output to files
+      writeOutput(outputFileName0, averageQuantities);
+      writeOutput(outputFileName1, popularBrands);
+    });
+  }else{
+    if(1 < lineCount == true){
+      console.log('Minimum amount of lines is 2')
+    }else if(lineCount > Math.pow(10,4) == true){
+      console.log('Maximum amount of lines is 10^4')
+    }
+  }
+  
 }
 //Line counter
 function countLines(stream) {
